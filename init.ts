@@ -7,7 +7,7 @@ const signIn: OrderConfig = {
 	desc: [ "签到", "" ],
 	headers: [ "签到" ],
 	regexps: [],
-	main: "achieves/signin",
+	main: "achieves/signIn",
 	detail: "签到获取插件货币"
 }
 
