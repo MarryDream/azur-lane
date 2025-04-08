@@ -1,6 +1,7 @@
 import { getRandomNumber } from "@/utils/random";
 import { ICharacterInfo } from "#/azur-lane/types/characterInfo";
 import FileManagement from "@/modules/file";
+import { metaManagement } from "#/azur-lane/init";
 
 type WifeRes = {
 	status: true;
@@ -12,7 +13,7 @@ type WifeRes = {
 
 // 获取老婆
 export async function getWife( file: FileManagement ): Promise<WifeRes> {
-	const charaList = await file.getDirFiles( "azur-lane/assets/character", "plugin" );
+	const charaList = Object.keys( metaManagement.getMeta( "meta/alias" ) );
 	if ( !charaList.length ) {
 		return { status: false, msg: "没有可用的舰船数据，请联系 BOT 管理者。" };
 	}

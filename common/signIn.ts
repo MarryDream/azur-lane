@@ -18,7 +18,6 @@ export async function getSignInInfo( redis: Database, dataKey: string ): Promise
 	
 	let signInInfo: IUserSignInfo;
 	
-	const todayDate = moment().format( "YYYY-MM-DD" ); // 今天的日期
 	if ( signInInfoStr ) {
 		try {
 			signInInfo = JSON.parse( signInInfoStr );

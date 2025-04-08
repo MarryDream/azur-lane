@@ -1,5 +1,8 @@
 import { OrderConfig } from "@/modules/command";
 import { definePlugin } from "@/modules/plugin";
+import * as m from "./module";
+
+export let metaManagement: m.MetaManagement;
 
 const signIn: OrderConfig = {
 	type: "order",
@@ -34,5 +37,11 @@ const wifeRefresh: OrderConfig = {
 export default definePlugin( {
 	name: "碧蓝航线",
 	cfgList: [ signIn, wifeToday, wifeRefresh ],
-	publicDirs: [ "assets", "views" ]
+	publicDirs: [ "assets", "views" ],
+	mounted( param ) {
+		/* 初始化 meta 数据 */
+		metaManagement = new m.MetaManagement( param.file, param.logger );
+		/* 初始化 meta 监听器 */
+		metaManagement.watchStart();
+	}
 } );

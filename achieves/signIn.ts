@@ -3,6 +3,7 @@ import { getRandomNumber } from "@/utils/random";
 import moment from "moment";
 import { segment, Sendable } from "@/modules/lib";
 import { getSignInInfo } from "#/azur-lane/common/signIn";
+import { metaManagement } from "#/azur-lane/init";
 
 export default defineDirective( "order", async ( { messageData, redis, logger, file, sendMessage } ) => {
 	const userId = messageData.user_id;
@@ -54,7 +55,7 @@ export default defineDirective( "order", async ( { messageData, redis, logger, f
 	
 	
 	// 随机抽一个一格漫画
-	const cartoonList = await file.getDirFiles( "azur-lane/assets/cartoon", "plugin" );
+	const cartoonList = metaManagement.getMeta( "meta/cartoon" );
 	
 	let cartoonBase64: string | null;
 	if ( cartoonList.length ) {
@@ -62,7 +63,7 @@ export default defineDirective( "order", async ( { messageData, redis, logger, f
 		const randomCartoon = cartoonList[getRandomNumber( 0, cartoonList.length - 1 )];
 		
 		// 获取漫画图片的 base64
-		cartoonBase64 = await file.loadFile( `azur-lane/assets/cartoon/${ randomCartoon }`, "plugin", "base64" );
+		cartoonBase64 = await file.loadFile( `azur-lane/assets/cartoon/${ randomCartoon }.png`, "plugin", "base64" );
 		
 		if ( cartoonBase64 ) {
 			// 在消息最前面插入
