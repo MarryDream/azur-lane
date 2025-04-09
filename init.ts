@@ -3,6 +3,11 @@ import { definePlugin } from "@/modules/plugin";
 import * as m from "./module";
 
 export let metaManagement: m.MetaManagement;
+export let aliasClass: m.AliasClass;
+
+function initModules() {
+	aliasClass = new m.AliasClass();
+}
 
 const signIn: OrderConfig = {
 	type: "order",
@@ -30,18 +35,31 @@ const wifeRefresh: OrderConfig = {
 	desc: [ "今日老婆刷新", "" ],
 	headers: [ "今日老婆刷新" ],
 	regexps: [],
-	main: "achieves/wife/refresh.ts",
+	main: "achieves/wife/refresh",
 	detail: "刷新今日老婆，每次消耗2魔方"
+};
+
+const wifeArtwork: OrderConfig = {
+	type: "order",
+	cmdKey: "azur-lane.wife-artwork",
+	desc: [ "查看换装", "[舰船名称](换装名称)" ],
+	headers: [ "换装" ],
+	regexp: /^(\S+?)(?:\s+(\d{1,2}|通常|改造|誓约))?$/,
+	main: "achieves/wife/artwork",
+	detail: "获取舰娘立绘\n" +
+		"换装名称支持列表: 1-2位数数字、通常、改造、誓约\n" +
+		"不填则默认通常立绘"
 };
 
 export default definePlugin( {
 	name: "碧蓝航线",
-	cfgList: [ signIn, wifeToday, wifeRefresh ],
+	cfgList: [ signIn, wifeToday, wifeArtwork, wifeRefresh ],
 	publicDirs: [ "assets", "views" ],
 	mounted( param ) {
 		/* 初始化 meta 数据 */
 		metaManagement = new m.MetaManagement( param.file, param.logger );
 		/* 初始化 meta 监听器 */
 		metaManagement.watchStart();
+		initModules();
 	}
 } );
