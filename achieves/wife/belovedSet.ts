@@ -9,7 +9,7 @@ export default defineDirective( "order", async ( { messageData, matchResult, sen
 	
 	if ( result.definite ) {
 		await redis.setString( dbKey.belovedWife( userId ), result.info );
-		return sendMessage( `已设置[${ result.info }]为本名老婆` );
+		return sendMessage( `已设置[${ result.info }]为本命老婆` );
 	}
 	if ( result.info === "" ) {
 		return sendMessage( "未找到相关舰船信息，请检查角色名称是否正确。若确认无误，请联系 BOT 持有者" )

@@ -42,8 +42,8 @@ const wifeRefresh: OrderConfig = {
 const belovedWifeSet: OrderConfig = {
 	type: "order",
 	cmdKey: "azur-lane.beloved-wife-set",
-	desc: [ "本名老婆", "[舰船名称]" ],
-	headers: [ "本名老婆" ],
+	desc: [ "本命老婆", "[舰船名称]" ],
+	headers: [ "本命老婆" ],
 	regexps: [ ".+" ],
 	main: "achieves/wife/belovedSet",
 	detail: "设置本命老婆，本命老婆会在今日老婆中优先出现"
