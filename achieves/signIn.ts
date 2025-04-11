@@ -4,13 +4,13 @@ import moment from "moment";
 import { segment, Sendable } from "@/modules/lib";
 import { getSignInInfo } from "#/azur-lane/common/signIn";
 import { metaManagement } from "#/azur-lane/init";
+import { dbKey } from "#/azur-lane/common/databaseKey";
 
 export default defineDirective( "order", async ( { messageData, redis, logger, file, sendMessage } ) => {
 	const userId = messageData.user_id;
 	
 	// 获取用户签到信息
-	const signInDataKey = `azur-lane:sign-in:${ userId }`;
-	const signInInfoRes = await getSignInInfo( redis, signInDataKey );
+	const signInInfoRes = await getSignInInfo( redis, userId );
 	if ( !signInInfoRes.status ) {
 		if ( signInInfoRes.logger ) {
 			logger.error( `[azur-lane]${ signInInfoRes.logger }` );
@@ -44,7 +44,7 @@ export default defineDirective( "order", async ( { messageData, redis, logger, f
 	// 奖励金币，每次签到奖励10金币
 	signInInfo.gold = ( signInInfo.gold || 0 ) + 10; // 金币数量增加10
 	
-	await redis.setString( signInDataKey, JSON.stringify( signInInfo ) );
+	await redis.setString( dbKey.signIn( userId ), JSON.stringify( signInInfo ) );
 	
 	const messageToSend: Sendable = [
 		`签到成功！魔方+10\n`,

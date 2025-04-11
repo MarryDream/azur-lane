@@ -39,6 +39,16 @@ const wifeRefresh: OrderConfig = {
 	detail: "刷新今日老婆，每次消耗2魔方"
 };
 
+const belovedWifeSet: OrderConfig = {
+	type: "order",
+	cmdKey: "azur-lane.beloved-wife-set",
+	desc: [ "本名老婆", "[舰船名称]" ],
+	headers: [ "本名老婆" ],
+	regexps: [ ".+" ],
+	main: "achieves/wife/belovedSet",
+	detail: "设置本命老婆，本命老婆会在今日老婆中优先出现"
+};
+
 const wifeArtwork: OrderConfig = {
 	type: "order",
 	cmdKey: "azur-lane.wife-artwork",
@@ -53,7 +63,7 @@ const wifeArtwork: OrderConfig = {
 
 export default definePlugin( {
 	name: "碧蓝航线",
-	cfgList: [ signIn, wifeToday, wifeArtwork, wifeRefresh ],
+	cfgList: [ signIn, wifeToday, wifeRefresh, belovedWifeSet, wifeArtwork ],
 	publicDirs: [ "assets", "views" ],
 	mounted( param ) {
 		/* 初始化 meta 数据 */

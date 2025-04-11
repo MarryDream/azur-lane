@@ -1,6 +1,7 @@
 import Database from "@/modules/database";
 import moment from "moment";
 import { IUserSignInfo } from "#/azur-lane/types/userSignInfo";
+import { dbKey } from "#/azur-lane/common/databaseKey";
 
 type SignInRes = {
 	status: true;
@@ -12,9 +13,9 @@ type SignInRes = {
 }
 
 // 获取签到信息
-export async function getSignInInfo( redis: Database, dataKey: string ): Promise<SignInRes> {
+export async function getSignInInfo( redis: Database, userId: string | number ): Promise<SignInRes> {
 	// 获取用户签到信息
-	const signInInfoStr = await redis.getString( dataKey );
+	const signInInfoStr = await redis.getString( dbKey.signIn( userId ) );
 	
 	let signInInfo: IUserSignInfo;
 	
@@ -26,7 +27,7 @@ export async function getSignInInfo( redis: Database, dataKey: string ): Promise
 			return {
 				status: false,
 				msg: "未正常获取到签到信息，请重试或联系 BOT 管理者。",
-				logger: `解析签到信息数据[${ dataKey }]的签到信息失败，数据：${ signInInfoStr }，错误：${ ( <Error> error ).message }`
+				logger: `解析签到信息数据[${ userId }]的签到信息失败，数据：${ signInInfoStr }，错误：${ ( <Error> error ).message }`
 			}
 		}
 	}

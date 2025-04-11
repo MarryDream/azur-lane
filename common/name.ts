@@ -1,8 +1,11 @@
 import { aliasClass } from "#/azur-lane/init";
-import { fuzzyMatch, MatchResult } from "./fuzzy-match";
+import { fuzzyMatch, MatchResult } from "./fuzzyMatch";
 
-export interface NameResult {
-	definite: boolean;
+export type NameResult = {
+	definite: true;
+	info: string;
+} | {
+	definite: false;
 	info: string | string[];
 }
 

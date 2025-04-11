@@ -3,11 +3,12 @@ import moment from "moment";
 import { segment } from "@/modules/lib";
 import { getWife } from "#/azur-lane/common/wife";
 import bot from "ROOT";
+import { dbKey } from "#/azur-lane/common/databaseKey";
 
 export default defineDirective( "order", async ( { messageData, redis, file, sendMessage } ) => {
 	const userId = messageData.user_id;
 	
-	const wifeDataKey = `azur-lane:wife-today:${ userId }`;
+	const wifeDataKey = dbKey.wifeToday( userId );
 	const userWife = await redis.getString( wifeDataKey );
 	if ( userWife ) {
 		const WIFE_REFRESH = <Order>bot.command.getSingle( "azur-lane.wife-refresh", await bot.auth.get( userId ) );
@@ -15,7 +16,7 @@ export default defineDirective( "order", async ( { messageData, redis, file, sen
 		return sendMessage( `你今天已经有老婆了！你的老婆是[${ userWife }]${ appendMsg }` );
 	}
 	
-	const wifeRes = await getWife( file );
+	const wifeRes = await getWife( userId );
 	if ( !wifeRes.status ) {
 		return sendMessage( wifeRes.msg );
 	}

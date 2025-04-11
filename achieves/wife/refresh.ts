@@ -4,10 +4,11 @@ import { segment } from "@/modules/lib";
 import { getWife } from "#/azur-lane/common/wife";
 import { getSignInInfo } from "#/azur-lane/common/signIn";
 import bot from "ROOT";
+import { dbKey } from "#/azur-lane/common/databaseKey";
 
-export default defineDirective( "order", async ( { messageData, redis, logger, file, sendMessage } ) => {
+export default defineDirective( "order", async ( { messageData, redis, logger, sendMessage } ) => {
 	const userId = messageData.user_id;
-	const wifeDataKey = `azur-lane:wife-today:${ userId }`;
+	const wifeDataKey = dbKey.wifeToday( userId );
 	const userWife = await redis.getString( wifeDataKey );
 	if ( !userWife ) {
 		const WIFE_TODAY = <Order>bot.command.getSingle( "azur-lane.wife-today", await bot.auth.get( userId ) );
@@ -16,8 +17,7 @@ export default defineDirective( "order", async ( { messageData, redis, logger, f
 	}
 	
 	// 获取用户签到信息
-	const signInDataKey = `azur-lane:sign-in:${ userId }`;
-	const signInInfoRes = await getSignInInfo( redis, signInDataKey );
+	const signInInfoRes = await getSignInInfo( redis, userId );
 	if ( !signInInfoRes.status ) {
 		if ( signInInfoRes.logger ) {
 			logger.error( `[azur-lane]${ signInInfoRes.logger }` );
@@ -30,7 +30,7 @@ export default defineDirective( "order", async ( { messageData, redis, logger, f
 		return sendMessage( "魔方不够了哦" );
 	}
 	
-	const wifeRes = await getWife( file );
+	const wifeRes = await getWife( userId );
 	if ( !wifeRes.status ) {
 		return sendMessage( wifeRes.msg );
 	}
@@ -43,7 +43,7 @@ export default defineDirective( "order", async ( { messageData, redis, logger, f
 	
 	// 扣除本次刷新费用
 	signInInfo.gold -= 2;
-	await redis.setString( signInDataKey, JSON.stringify( signInInfo ) );
+	await redis.setString( dbKey.signIn( userId ), JSON.stringify( signInInfo ) );
 	
 	// 组装发送
 	await sendMessage( [
